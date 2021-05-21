@@ -99,7 +99,19 @@ const Modal = ({ disabled }) => {
 
   useEffect(() => {
     const coder = new utils.AbiCoder();
+    const callData = coder.encode(['address', 'address', 'address', 'address', 'address', 'address'], [...Object.values(vaultZapData), account]);
+
+    console.log("Calldata: ", callData)
+
+    setCallData(callData);
+  }, []);
+
+
+  useEffect(() => {
+    const coder = new utils.AbiCoder();
     const callData = coder.encode(['address', 'address', 'address', 'address', 'address', 'address'], [...Object.values(vaultZapData), recipient]);
+
+    console.log("Calldata: ", callData)
 
     setCallData(callData);
   }, [recipient]);
