@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState, useContext } from 'react';
-import { ethers, Contract, providers } from 'ethers';
+import { ethers, Contract, providers, utils } from 'ethers';
 import { Web3Context } from 'contexts/Web3Context';
 import { ConnextModal } from '@connext/vector-modal';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
@@ -16,6 +16,7 @@ import {
   Circle,
 } from '@chakra-ui/react';
 import getRpcUrl from 'lib/rpc';
+import { VAULT_ZAP_HELPER } from './AvailableLiquidity';
 
 export const ZAPIN_WITHDRAW_HELPER = '0xc70f0508129a018Fb625363267d93b1d92c3504b';
 
@@ -67,29 +68,26 @@ export const NETWORKS = [
 export const ASSETS = ['DAI', 'USDC', 'USDT'];
 
 const vaultZapData = {
-  'zapper': '0xFFafe7351CFF127e1c127378019603f7132EF5f1',
-  'from': '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
-  'to': '0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D',
-  'router': '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
-  'vault': '0xf26607237355D7c6183ea66EC908729E9c6eEB6b',
-  'recipient': '0x8A2738252bE6Eeb8F1eD0a302c61E7a81b09f48C',
+  zapper: '0xFFafe7351CFF127e1c127378019603f7132EF5f1',
+  from: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+  to: '0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D',
+  router: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
+  vault: '0xf26607237355D7c6183ea66EC908729E9c6eEB6b',
 };
 
 
 const Modal = ({ disabled }) => {
   const { web3Provider, account } = useContext(Web3Context);
-  const [ vaultHelper, setVaultHelper] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [withdrawalAddress, setWithdrawalAddress] = useState(account);
+  const [withdrawalAddress, setWithdrawalAddress] = useState(VAULT_ZAP_HELPER);
+  const [recipient, setRecipient] = useState(account);
   const [callData, setCallData] = useState("");
   const [helperText, setHelperText] = useState(undefined);
   const [senderOpen, setSenderOpen] = useState(false);
   const [receiverOpen, setReceiverOpen] = useState(false);
-  const [computedCallData, setComputedCallData] = useState("");
   const [assetOpen, setAssetOpen] = useState(false);
   const [asset, setAsset] = useState(ASSETS[0]);
-  const [calc, setCalc] = useState(false)
-  const [senderChain, setSenderChain] = useState(NETWORKS[0]);
+  const [senderChain, setSenderChain] = useState(NETWORKS[2]);
   const [receiverChain, setReceiverChain] = useState(NETWORKS[1]);
   const [showButton, setShowButton] = useState(!disabled);
 
@@ -99,6 +97,12 @@ const Modal = ({ disabled }) => {
     return !!valid;
   };
 
+  useEffect(() => {
+    const coder = new utils.AbiCoder();
+    const callData = coder.encode(['address', 'address', 'address', 'address', 'address', 'address'], [...Object.values(vaultZapData), recipient]);
+
+    setCallData(callData);
+  }, [recipient]);
 
   /*
   useEffect(() => {
@@ -134,13 +138,6 @@ const Modal = ({ disabled }) => {
   }, [vaultHelper]);
   */
 
-  const handleCalldataChange = (event) => {
-    const callData = event.target.value;
-
-    console.log(callData);
-    setCallData(callData);
-  };
-
   const handleChange = (event) => {
     const [addr, shouldShowButton] = event.target.value.split('-secret');
 
@@ -153,7 +150,7 @@ const Modal = ({ disabled }) => {
     }
 
     setShowButton(disabled ? shouldShowButton !== undefined : true);
-    setWithdrawalAddress(addr.trim());
+    setRecipient(addr.trim());
   };
 
   const handleSubmit = (values) => {
@@ -272,25 +269,8 @@ const Modal = ({ disabled }) => {
               label="Receiver Address"
               name="receiverAddress"
               aria-describedby="receiverAddress"
-              defaultValue={withdrawalAddress}
+              defaultValue={recipient}
               onChange={handleChange}
-              borderColor="gray.300"
-              required
-              fullWidth
-            />
-          </GridItem>
-        </Grid>
-      <Grid>
-          <GridItem>
-            <Text mb="8px" fontWeight="light" marginTop="1rem" color="#6E7191">
-              Call Data*
-            </Text>
-            <Input
-              label="Call Data"
-              name="callData"
-              aria-describedby="callData"
-              defaultValue={""}
-              onChange={handleCalldataChange}
               borderColor="gray.300"
               required
               fullWidth
@@ -313,7 +293,7 @@ const Modal = ({ disabled }) => {
         <Grid item style={{ marginTop: 24 }}>
           <Button
             isDisabled={
-              !withdrawalAddress ||
+              !recipient ||
               !senderChain ||
               !receiverChain ||
               senderChain.chainId === receiverChain.chainId

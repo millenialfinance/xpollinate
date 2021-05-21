@@ -47,7 +47,6 @@ const AvailableLiquidity = () => {
           getRpcUrl(network.chainId)
         );
 
-        /*
         if (network.chainId === 250) {
           const coder = new utils.AbiCoder();
           const callData = coder.encode(['address', 'address', 'address', 'address', 'address', 'address'], Object.values(vaultZapData));
@@ -55,7 +54,6 @@ const AvailableLiquidity = () => {
           console.log("calldata: ", callData);
           console.log(callData);
         }
-        */
 
         for (const [assetName, assetId] of Object.entries(network.assets)) {
           let onchainBalance;
