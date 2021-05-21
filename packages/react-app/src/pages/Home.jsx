@@ -11,7 +11,16 @@ export const Home = (props) => (
       fontSize="2xl"
       fontFamily="sans-serif"
     >
-      Cross-Chain Bridge
+      Cross-Chain Vault Zap
+    </Text>
+    <Text
+      align="center"
+      p="1rem"
+      fontWeight="thin"
+      fontSize="l"
+      fontFamily="sans-serif"
+    >
+      This will zap your fantom DAI into the wBTC/wETH vault at <a href="https://polygon.beefy.finance/">Beefy Finance</a>
     </Text>
     <Container />
   </div>

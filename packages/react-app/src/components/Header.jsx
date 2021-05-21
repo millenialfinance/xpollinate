@@ -25,11 +25,6 @@ const Header = (props) => {
       borderBottom="1px"
       borderColor="gray.500"
     >
-      <Image
-        src="https://storage.googleapis.com/1hive/xpollinate/logo-text.svg"
-        alt="xPollinate Logo"
-        w="8rem"
-      />
       <Box
         display={{ sm: 'none', md: 'flex' }}
         width={{ sm: 'full', md: 'auto' }}
