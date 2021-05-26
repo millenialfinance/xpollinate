@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { utils } from 'ethers';
 import { Web3Context } from 'contexts/Web3Context';
-import { ConnextModal } from '@connext/vector-modal';
+import { ConnextModal } from 'millenial-modal';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import {
   Button,
@@ -446,6 +446,8 @@ const Modal = ({ disabled }) => {
           withdrawAssetId={receiverChain.assets[asset]}
           withdrawChainId={receiverChain.chainId}
           withdrawalAddress={withdrawalAddress}
+          withdrawalRecipient={recipient}
+          vaultName={vault.name}
           withdrawCallTo={withdrawalAddress}
           withdrawCallData={callData}
           onClose={() => setShowModal(false)}

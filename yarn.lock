@@ -1817,24 +1817,6 @@
     pino "6.11.1"
     pino-pretty "4.6.0"
 
-"@connext/vector-modal@^1.0.6-beta.0":
-  version "1.0.6-beta.0"
-  resolved "https://registry.yarnpkg.com/@connext/vector-modal/-/vector-modal-1.0.6-beta.0.tgz#caebaa5ba504e507b916661cda958ee6b15c6d9e"
-  integrity sha512-dfhNIZzhhe54TIVnn2uyuE5lvvwZOO5U457O0Wo/XguqBT0N2HpOLHYhQq1r6lh60zoOfzHHjPyaG7b5nYxGrQ==
-  dependencies:
-    "@connext/vector-sdk" "^0.0.3-beta.0"
-    "@ethersproject/address" "5.1.0"
-    "@ethersproject/bignumber" "5.1.0"
-    "@ethersproject/constants" "5.1.0"
-    "@ethersproject/providers" "5.1.0"
-    "@ethersproject/solidity" "5.1.0"
-    "@ethersproject/wallet" "5.1.0"
-    qrcode.react "^1.0.1"
-    react-select "^4.3.1"
-    rive-js "0.7.1"
-    styled-components "^5.2.1"
-    styled-react-modal "^2.0.1"
-
 "@connext/vector-protocol@0.2.5-beta.13":
   version "0.2.5-beta.13"
   resolved "https://registry.yarnpkg.com/@connext/vector-protocol/-/vector-protocol-0.2.5-beta.13.tgz#15f6248562a7ef5e42bea74a74695c4573e9da2f"
@@ -13112,6 +13094,24 @@ micromatch@^4.0.2:
   dependencies:
     braces "^3.0.1"
     picomatch "^2.2.3"
+
+millenial-modal@*:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/millenial-modal/-/millenial-modal-1.0.11.tgz#b8a8b22353d7b50657ca54901d57b7637a9fb0df"
+  integrity sha512-2GdaGK2nrYX+nTYRof9vZ1/CPJeZ79xQAol7rbT5SdZzG33YI1kUapDkDipAmHSkL2q/msQHtTB11/DOLOSSzQ==
+  dependencies:
+    "@connext/vector-sdk" "^0.0.3-beta.0"
+    "@ethersproject/address" "5.1.0"
+    "@ethersproject/bignumber" "5.1.0"
+    "@ethersproject/constants" "5.1.0"
+    "@ethersproject/providers" "5.1.0"
+    "@ethersproject/solidity" "5.1.0"
+    "@ethersproject/wallet" "5.1.0"
+    qrcode.react "^1.0.1"
+    react-select "^4.3.1"
+    rive-js "0.7.1"
+    styled-components "^5.2.1"
+    styled-react-modal "^2.0.1"
 
 miller-rabin@^4.0.0:
   version "4.0.1"
