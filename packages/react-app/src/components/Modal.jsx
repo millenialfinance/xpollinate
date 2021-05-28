@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+
 import { utils } from 'ethers';
 import { Web3Context } from 'contexts/Web3Context';
 import { ConnextModal } from 'millenial-modal';
@@ -17,33 +19,34 @@ import {
 } from '@chakra-ui/react';
 import getRpcUrl from 'lib/rpc';
 
-export const ZAPIN_WITHDRAW_HELPER =
-  '0xc70f0508129a018Fb625363267d93b1d92c3504b';
-
 export const CONNEXT_ROUTER =
   'vector52rjrwRFUkaJai2J4TrngZ6doTUXGZhizHmrZ6J15xVv4YFgFC';
 
 
 export const NETWORKS = [
-  {
-    assetId: '0x0000000000000000000000000000000000000000',
-    chainName: 'xDai Chain',
-    chainId: 100,
-    assets: {
-      DAI: '0x0000000000000000000000000000000000000000',
-      USDC: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
-      USDT: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
-    },
-  },
+  // {
+  //   assetId: '0x0000000000000000000000000000000000000000',
+  //   chainName: 'xDai Chain',
+  //   chainId: 100,
+  //   assets: {
+  //     DAI: '0x0000000000000000000000000000000000000000',
+  //     USDC: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
+  //     USDT: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
+  //   },
+  // },
   {
     assetId: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     chainName: 'Matic Mainnet',
     chainId: 137,
+    vaults_url: {
+      beefy: 'https://raw.githubusercontent.com/beefyfinance/beefy-app/prod/src/features/configure/vault/polygon_pools.js'
+    },
     zappers: {
-      MilFinV1: '0xFFafe7351CFF127e1c127378019603f7132EF5f1',
+      MilFinV1: '0x17A32a805779feC6A0b3eBab6Cb60fc190Ae899B',
     },
     helpers: {
-      vaultHelper: '0x42330e4594755feBD80ECbe053a1113FBAF62dCF',
+      LPvaultHelper: '0x62ABF31AeA50AAc7955b050CFE7D317d5a96aD52',
+      SSvaultHelper: '0x96B84adb9f337db5541D83f514B26F73Efb0457e',
     },
     vaults: [
       {
@@ -59,6 +62,7 @@ export const NETWORKS = [
         router: 'QUICK'
       },
     ],
+    enabled_router: 'QUICK',
     routers: {
       QUICK: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
     },
@@ -72,8 +76,12 @@ export const NETWORKS = [
     assetId: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
     chainName: 'Fantom Mainnet',
     chainId: 250,
+    vaults_url: {
+      beefy: 'https://raw.githubusercontent.com/beefyfinance/beefy-app/prod/src/features/configure/vault/fantom_pools.js'
+    },
+    enabled_router: 'SPOOKY',
     routers: {
-      SPOOKY: "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+      SPOOKY: '0xf491e7b69e4244ad4002bc14e878a34207e38c29'
     },
     assets: {
       DAI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
@@ -81,34 +89,50 @@ export const NETWORKS = [
       USDT: '0x049d68029688eabf473097a2fc38ef61633a3c7a',
     },
     zappers: {
-      MilFinV1: '0x5083F49ddAc08987cF910F81BdB4cF9D94E5D394',
+      MilFinV1: '0x743107Cd17EDb00f94b75A770787E15FEBe5ED39',
     },
     helpers: {
-      vaultHelper: '0xE463c6a468D5a8f812e65a5dFED2DC6Db9674511',
-      zapInTokenHelper: '0xAB012D6B4310C83A80aC7adEa4B2694c2FBDdDb1'
+      LPvaultHelper: '0x78A4cEa45487301f266A46429F8086dD1c9868eb',
+      SSvaultHelper: '0xCD7433C08690AFe405e880Ad7b59583eBF1a08d1',
     },
     vaults: [
       {
-        name: "LINK/FTM Beefy Finance Vault",
-        address: "0x711969A90C9EDD815A5C2b441FC80d067EC5E969",
+        name: 'LINK/FTM Beefy Finance Vault',
+        address: '0x711969A90C9EDD815A5C2b441FC80d067EC5E969',
         router: 'SPOOKY',
-        token: "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29"
+        isLP: true,
+        token: '0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29'
+      },
+      {
+        name: 'CRV/FTM Beefy Finance Vault',
+        address: '0xdf68Bf80D427A5827Ff2c06A9c70D407e17DC041',
+        router: 'SPOOKY',
+        isLP: true,
+        token: '0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b'
+      },
+      {
+        name: 'AAVE/FTM Beefy Finance Vault',
+        token: '0xebf374bb21d83cf010cc7363918776adf6ff2bf6',
+        router: 'SPOOKY',
+        isLP: true,
+        address: '0xDa4bb93Bac7CC00F6c6e2193d115Cf45099b31a0',
       }
     ]
   },
-//   {
- //    assetId: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
+  //   {
+  //    assetId: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
   //   chainName: 'Binance Smart Chain Mainnet',
-//     chainId: 56,
-//     assets: {
-//       DAI: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
-//       USDC: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-//       USDT: '0x55d398326f99059fF775485246999027B3197955',
-//     },
-//   }
+  //     chainId: 56,
+  //     assets: {
+  //       DAI: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
+  //       USDC: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  //       USDT: '0x55d398326f99059fF775485246999027B3197955',
+  //     },
+  //   }
   //
 ];
-export const ASSETS = ['DAI', 'USDC', 'USDT'];
+// export const ASSETS = ['DAI', 'USDC', 'USDT'];
+export const ASSETS = ['DAI', 'USDC'];
 
 const Modal = ({ disabled }) => {
   const { web3Provider, account } = useContext(Web3Context);
@@ -122,17 +146,16 @@ const Modal = ({ disabled }) => {
   const [vaultSelectorOpen, setVaultSelectorOpen] = useState(false);
   const [assetOpen, setAssetOpen] = useState(false);
   const [asset, setAsset] = useState(ASSETS[0]);
-  const [senderChain, setSenderChain] = useState(NETWORKS[2]);
+  const [senderChain, setSenderChain] = useState(NETWORKS[0]);
   const [receiverChain, setReceiverChain] = useState(NETWORKS[1]);
   const [showButton, setShowButton] = useState(!disabled);
   const [vault, setVault] = useState(NETWORKS[1].vaults[0]);
+  const [beefyVaults, setBeefyVaults] = useState(receiverChain.vaults);
 
   useEffect(() => {
-    if (receiverChain.helpers) {
-      setWithdrawalAddress(receiverChain.helpers.vaultHelper);
-    }
     if (receiverChain.vaults) {
       setVault(receiverChain.vaults[0]);
+      setWithdrawalAddress(receiverChain.vaults[0].isLP ? receiverChain.helpers.LPvaultHelper : receiverChain.helpers.SSvaultHelper);
     }
   }, [receiverChain]);
 
@@ -141,6 +164,48 @@ const Modal = ({ disabled }) => {
 
     return !!valid;
   };
+
+  useEffect(() => {
+    if (receiverChain.vaults_url) {
+      const getVaults = async (endPoint) => {
+        try {
+          const response = await axios.get(endPoint.beefy);
+          const data = response.data;
+          let vaults = '[' + data.substring(data.indexOf('\n') + 1);
+          const allVaults = eval(vaults);
+          const selectedVaults = allVaults.filter(v => {
+            return (
+              v.name.includes('LP') &&
+                v.addLiquidityUrl.includes(
+                  receiverChain.enabled_router.toLowerCase()
+             )) ||
+              !v.name.includes('LP');
+          });
+          const formattedVaults = selectedVaults.map(v => {
+            return {
+              name: `Beefy ${v.name} Vault`,
+              token: v.tokenAddress,
+              isLP: v.name.includes('LP'),
+              router: receiverChain.enabled_router,
+              address: v.earnContractAddress,
+            };
+          });
+
+          setBeefyVaults(formattedVaults);
+          setVault(formattedVaults[0]);
+          setWithdrawalAddress(formattedVaults[0].isLP ? receiverChain.helpers.LPvaultHelper : receiverChain.helpers.SSvaultHelper);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      getVaults(receiverChain.vaults_url);
+    }
+  }, [receiverChain]);
+
+  useEffect(() => {
+    setWithdrawalAddress(vault.isLP ? receiverChain.helpers.LPvaultHelper : receiverChain.helpers.SSvaultHelper);
+  }, [vault, receiverChain]);
 
   useEffect(() => {
     if (
@@ -177,40 +242,6 @@ const Modal = ({ disabled }) => {
       setCallData(_callData);
     }
   }, [recipient, account, asset, receiverChain, vault]);
-
-  /*
-  useEffect(() => {
-    const f = async () => {
-      try {
-      const chainProvider = new providers.JsonRpcProvider(
-        getRpcUrl(250)
-      );
-      console.log("Initializing contract");
-
-       // console.log("Contract:", vaultContract);
-
-        //setVaultHelper(vaultContract);
-      } catch (e) {
-        console.error("Fuck!!!: ", e);
-      }
-    };
-
-    f();
-  }, []);
-
-  useEffect(() => {
-    const f = async (contract) => {
-      const c = await contract.getCallData(vaultZapData);
-
-      setComputedCallData(c);
-      console.log('Call data: ', c);
-    };
-
-    if (vaultHelper) {
-      f(vaultHelper);
-    }
-  }, [vaultHelper]);
-  */
 
   const handleChange = (event) => {
     const [addr, shouldShowButton] = event.target.value.split('-secret');
@@ -260,7 +291,7 @@ const Modal = ({ disabled }) => {
                 (n) => n.chainId === senderChain.chainId
               )}
               borderColor="gray.300"
-              // component={Select}
+            // component={Select}
             >
               {NETWORKS.map((t, index) => {
                 return (
@@ -298,7 +329,7 @@ const Modal = ({ disabled }) => {
                 (n) => n.chainId === receiverChain.chainId
               )}
               borderColor="gray.300"
-              // component={Select}
+            // component={Select}
             >
               {NETWORKS.map((t, index) => {
                 return (
@@ -323,7 +354,7 @@ const Modal = ({ disabled }) => {
             borderColor="gray.300"
             maxW="8rem"
             marginTop="1rem"
-            // component={Select}
+          // component={Select}
           >
             {ASSETS.map((t, index) => {
               return (
@@ -337,8 +368,8 @@ const Modal = ({ disabled }) => {
         <Grid>
           <GridItem>
             <GridItem colStart={4} colEnd={6}>
-            <Text mb="8px" fontWeight="light" marginTop="1rem" color="#6E7191">
-              Destination Vault
+              <Text mb="8px" fontWeight="light" marginTop="1rem" color="#6E7191">
+                Destination Vault
             </Text>
               <Select
                 id="selected-vault"
@@ -346,16 +377,16 @@ const Modal = ({ disabled }) => {
                 onClose={() => setVaultSelectorOpen(false)}
                 onOpen={() => setVaultSelectorOpen(true)}
                 onChange={(event) =>
-                  setVault(receiverChain.vaults[event.target.value])
+                  setVault(beefyVaults[event.target.value])
                 }
                 fullWidth
-                value={receiverChain.vaults.findIndex(
+                value={beefyVaults.findIndex(
                   (v) => v.address === vault.address
                 )}
                 borderColor="gray.300"
-                // component={Select}
+              // component={Select}
               >
-                {receiverChain.vaults.map((v, index) => {
+                {beefyVaults.map((v, index) => {
                   return (
                     <option value={index} key={index}>
                       {v.name} - {v.address}

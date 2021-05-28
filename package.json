@@ -9,12 +9,12 @@
   ],
   "private": true,
   "scripts": {
-    "react-app:build": "yarn workspace @1hive-connext/react-app build",
-    "react-app:eject": "yarn workspace @1hive-connext/react-app eject",
-    "react-app:ipfs": "yarn workspace @1hive-connext/react-app ipfs",
-    "react-app:lint": "yarn workspace @1hive-connext/react-app lint",
-    "react-app:start": "yarn workspace @1hive-connext/react-app start",
-    "react-app:test": "yarn workspace @1hive-connext/react-app test"
+    "react-app:build": "yarn workspace demozap build",
+    "react-app:eject": "yarn workspace demozap eject",
+    "react-app:ipfs": "yarn workspace demozap ipfs",
+    "react-app:lint": "yarn workspace demozap lint",
+    "react-app:start": "yarn workspace demozap start",
+    "react-app:test": "yarn workspace demozap test"
   },
   "workspaces": {
     "nohoist": [
